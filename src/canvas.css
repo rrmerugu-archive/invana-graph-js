@@ -1,0 +1,9 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.node {
+    fill: slategrey;
+    stroke: #23262d;
+}
