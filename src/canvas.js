@@ -5,18 +5,23 @@ const nodeRadius = 12;
 var graphs = {
     "nodes": [{
         "name": "Peter",
-        "label": "Person",
+        "label": "Person 1",
         "id": 1
     },
         {
             "name": "Michael",
-            "label": "Person",
+            "label": "Person 2",
             "id": 2
         },
         {
             "name": "Michael",
-            "label": "Person",
+            "label": "Person 3",
             "id": 3
+        },
+        {
+            "name": "Michael",
+            "label": "Person 4",
+            "id": 4
         }
     ],
     "links": [{
@@ -41,6 +46,21 @@ var graphs = {
             "target": 3,
             "type": "ALSO knows 3",
             "since": 2010
+        }, {
+            "source": 1,
+            "target": 4,
+            "type": "ALSO knows 4",
+            "since": 2010
+        }, {
+            "source": 1,
+            "target": 4,
+            "type": "ALSO knows 4.2",
+            "since": 2010
+        }, {
+            "source": 2,
+            "target": 4,
+            "type": "ALSO knows 4",
+            "since": 2010
         },
 
     ]
@@ -54,6 +74,28 @@ graphs.links.sort(function (a, b) {
     return 0;
 });
 
+
+// get the
+let graphLinksCountAggregate = {};
+graphs.links.forEach(function (d, i) {
+    const uniqueId = d.target + "-" + d.source;
+    if (uniqueId in graphLinksCountAggregate) {
+        graphLinksCountAggregate[uniqueId] += 1;
+    } else {
+        graphLinksCountAggregate[uniqueId] = 1;
+    }
+});
+
+graphs.links.forEach(function (d, i) {
+    let _ = graphLinksCountAggregate[d.target + "-" + d.source];
+
+    if (d.source + "-" + d.target in graphLinksCountAggregate) {
+        _ += graphLinksCountAggregate[d.source + "-" + d.target]
+    }
+    graphs.links[i].nLinksbetweenNodes = _
+});
+
+
 graphs.links.forEach(function (s, i) {
     graphs.links[i].sameIndex = (i + 1);
     graphs.links[i].sameTotal = graphs.links.length;
@@ -63,6 +105,8 @@ graphs.links.forEach(function (s, i) {
     graphs.links[i].sameLowerHalf = (s.sameIndex <= s.sameTotalHalf);
     graphs.links[i].sameArcDirection = s.sameLowerHalf ? 0 : 1;
     graphs.links[i].sameIndexCorrected = s.sameLowerHalf ? s.sameIndex : (s.sameIndex - Math.ceil(s.sameTotalHalf));
+
+
 });
 
 
@@ -151,7 +195,25 @@ const circles = nodes.append("circle")
 
 nodes.append("title")
     .text(function (d) {
-        return d.id;
+        return d.label;
+    })
+nodes.append("text")
+    .attr("dy", -16)
+    .attr("dx", 6)
+    .text(function (d) {
+        return d.label || d.id;
+    })
+    .style("fill", function (d, i) {
+        return "#c1c1c1";
+    })
+    .style("font-size", function (d, i) {
+        return "12px";
+    })
+    .style("font-weight", function (d, i) {
+        return "bold";
+    })
+    .style("text-shadow", function (d, i) {
+        return "1px 1px #424242";
     });
 
 simulation
@@ -176,21 +238,36 @@ function ticked() {
             dy = m.y - d.source.y,
             dr = Math.sqrt(dx * dx + dy * dy);
 
-        var unevenCorrection = (d.sameUneven ? 0 : 0.5);
         // curvature term defines how tight the arcs are (lower number = tigher curve)
-        var curvature = 4;
+        var curvature = 1.5;
 
-        let arc = (1.0 / curvature) * ((dr * d.maxSameHalf) / (d.sameIndexCorrected - unevenCorrection));
 
+        // graphLinksCountAggregate[uniqueId] = 1
+        // graphs.links[i].nLinksbetweenNodes = graphLinksCountAggregate[uniqueId];
+
+        const selector = '[association-id*="link-' + d.target.id + "-" + d.source.id + '"]';
+        const selector2 = '[association-id*="link-' + d.source.id + "-" + d.target.id + '"]';
+        let createdLinksCount = document.querySelectorAll(selector).length + document.querySelectorAll(selector2).length;
+
+
+        var unevenCorrection = ( d.nLinksbetweenNodes % createdLinksCount === 1 ? 0 : 0.5);
+
+        let arc;
         //d.maxSameHalf always showing zero...
-        if (d.sameMiddleLink || d.sameTotal === 1) {
+        if ((d.nLinksbetweenNodes === 1 && createdLinksCount === 1)
+            || (d.nLinksbetweenNodes === 3 && createdLinksCount === 1)
+            || (d.nLinksbetweenNodes === 5 && createdLinksCount === 1)
+        ) {
             arc = 0;
+        } else {
+            console.log("====, ", unevenCorrection)
+            arc = (1.0 / curvature) * ((dr * d.maxSameHalf) / (d.sameIndexCorrected - unevenCorrection));
         }
 
-        console.log("assoc",document.querySelectorAll('[association-id*="link-' + d.target.id + "-" + d.source.id + '"]').length)
-        if (document.querySelectorAll('[association-id*="link-' + d.target.id + "-" + d.source.id + '"]').length === 1) {
-            arc = 0;
-        }
+        // console.log("assoc", document.querySelectorAll('[association-id*="link-' + d.target.id + "-" + d.source.id + '"]').length)
+        // if (document.querySelectorAll('[association-id*="link-' + d.target.id + "-" + d.source.id + '"]').length === 1) {
+        //     arc = 0;
+        // }
 
         return "M" + d.source.x + "," + d.source.y + "A" + arc + "," + arc + " 0 0," + d.sameArcDirection + " " + d.target.x + "," + d.target.y;
     });
