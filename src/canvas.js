@@ -7,21 +7,6 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
     linksData = prepareLinksDataForCurves(linksData);
 
 
-    svg.append("svg:defs").selectAll("marker")
-        .data(linksData)
-        .enter().append("svg:marker")
-        .attr("id", (d, i) => "link-arrow-" + i)
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth))
-        .attr("refY", 0)
-        .attr("markerWidth", 10)
-        .attr("markerHeight", 10)
-        .attr("orient", "auto")
-        .attr("fill", linkFillColor)
-        .attr("stroke", linkFillColor)
-        .append("svg:path")
-        .attr("d", "M0,-5L10,0L0,5");
-
     const simulation = d3.forceSimulation()
         // .force("link", d3.forceLink().id(d => d.id))
         .force("center", d3.forceCenter(htmlSelector.clientWidth / 2, htmlSelector.clientHeight / 2))
@@ -59,25 +44,21 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
             return "#link-" + i;
         })
         .style("text-anchor", "middle")
-
         .attr("startOffset", "50%")
         .attr('fill', linkTextColor)
         .attr('stroke', linkFillColor)
-
         .text((d, i) => `${d.label || d.id}`);
 
     let nodes = nodesG
         .selectAll("g")
         .data(nodesData)
         .enter().append("g")
-
         .attr("cursor", "pointer")
         .attr("class", "node")
         .call(d3.drag()
             .on("start", dragStarted)
             .on("drag", dragged)
             .on("end", dragEnded));
-
 
     const circles = nodes.append("circle")
         .attr("r", nodeRadius)
@@ -109,6 +90,20 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
             return "1px 1px #424242";
         });
 
+    svg.append("svg:defs").selectAll("marker")
+        .data(linksData)
+        .enter().append("svg:marker")
+        .attr("id", (d, i) => "link-arrow-" + i)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth))
+        .attr("refY", 0)
+        .attr("markerWidth", 10)
+        .attr("markerHeight", 10)
+        .attr("orient", "auto")
+        .attr("fill", linkFillColor)
+        .attr("stroke", linkFillColor)
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
     simulation
         .nodes(nodesData)
         .on("tick", ticked);
