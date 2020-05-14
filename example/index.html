@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <style>
         * {
@@ -17,6 +18,7 @@
 <body>
 
 
+<div class=""></div>
 <svg id="graphCanvas" width="100%" height="100%"></svg>
 </body>
 <script src="/src/config.js"></script>
@@ -28,6 +30,34 @@
     let links = graphs.links;
     let nodes = graphs.nodes;
     let canvasHTMLSelector = "#graphCanvas";
-    canvas = new InvanaGraphUI(canvasHTMLSelector, nodes, links);
+
+
+
+
+    function onNodeClick()  { console.log("onNodeClick triggered") };
+    function onNodeMouseOver()  { console.log("onNodeMouseOver triggered") };
+    function onNodeMouseOut()  { console.log("onNodeMouseOut triggered") };
+
+
+    function onLinkClick()  { console.log("onLinkClick triggered") };
+    function onLinkMouseOver()  { console.log("onLinkMouseOver triggered") };
+    function onLinkMouseOut()  { console.log("onLinkMouseOut triggered") };
+
+
+
+    canvas = new InvanaGraphUI(canvasHTMLSelector,
+        nodes,
+        links,
+
+        onNodeClick,
+        onNodeMouseOver,
+        onNodeMouseOut,
+
+        onLinkClick,
+        onLinkMouseOver,
+        onLinkMouseOut
+
+
+    );
 </script>
 </html>

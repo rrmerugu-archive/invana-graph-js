@@ -1,7 +1,7 @@
 const nodeRadius = 24;
 const nodeFillColor = "#333333";
 const nodeTxtColor = "#efefef";
-const nodeStrokeColor = "#ffffff";
+const nodeStrokeColor = "#4385b8";
 const nodeStrokeWidth = 5;
 
 const linkDistance = 300;
@@ -13,23 +13,33 @@ const linkTextColor = "#727272";
 let graphs = {
     "nodes": [
         {
-            "label": "Satellite",
             "id": 1,
+            "type": "Vertex",
+            "label": "Satellite",
             "properties": {
-                "name": "Moon"
+                "name": "Moon",
+                "image": "https://pngimg.com/uploads/moon/moon_PNG19.png"
             },
             "meta": {
-                "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png"
+                "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png",
+                "shape": "circle",
+                "shapeOptions": {
+                    "radius": "14px",
+                    "strokeWidth": "2px",
+                    "strokeColor": "#333333",
+                    "fillColor": "#999999"
+                }
             }
         },
         {
             "label": "Planet",
             "id": 2,
             "properties": {
-                "name": "Earth"
+                "name": "Earth",
+                "image": "https://icons.iconarchive.com/icons/dtafalonso/modern-xp/512/ModernXP-73-Globe-icon.png"
             },
             "meta": {
-                "bgImageUrl": "https://image.flaticon.com/icons/svg/44/44386.svg"
+                "bgImageUrl": "https://icons.iconarchive.com/icons/dtafalonso/modern-xp/512/ModernXP-73-Globe-icon.png"
             }
         },
         {

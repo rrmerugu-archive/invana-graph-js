@@ -1,4 +1,15 @@
-function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
+function InvanaGraphUI(canvasHTMLSelector,
+                       nodesData,
+                       linksData,
+                       // node methods
+                       onNodeMouseOver,
+                       onNodeMouseOut,
+                       onNodeClick,
+                       // link methods
+                       onLinkClick,
+                       onLinkMouseOver,
+                       onLinkMouseOut
+) {
 
     const svg = d3.select(canvasHTMLSelector);
     const everything = svg.append("g").attr("class", "everything");
@@ -37,7 +48,23 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .attr('stroke', linkFillColor)
         .attr("stroke-width", linkStrokeWidth)
         .attr("fill", "transparent")
-        .attr('marker-end', (d, i) => 'url(#link-arrow-' + i + ')');
+        .attr('marker-end', (d, i) => 'url(#link-arrow-' + i + ')')
+        .on("mouseover", function (d) {
+            if (onLinkMouseOver) {
+                onLinkMouseOver(d)
+            }
+        })
+        .on("mouseout", function (d) {
+            if (onLinkMouseOut) {
+                onLinkMouseOut(d)
+            }
+        })
+        .on("click", function (d) {
+            if (onLinkClick) {
+                onLinkClick(d)
+            }
+        });
+
 
     const linkText = links
         .append("text")
@@ -61,7 +88,23 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .call(d3.drag()
             .on("start", dragStarted)
             .on("drag", dragged)
-            .on("end", dragEnded));
+            .on("end", dragEnded))
+        .on("mouseover", function (d) {
+            if (onNodeMouseOver) {
+                onNodeMouseOver(d)
+            }
+        })
+        .on("mouseout", function (d) {
+            if (onNodeMouseOut) {
+                onNodeMouseOut(d)
+            }
+        })
+        .on("click", function (d) {
+            if (onNodeClick) {
+                onNodeClick(d)
+            }
+        });
+
 
     nodes.append("circle")
         .attr("r", nodeRadius)
@@ -98,6 +141,8 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .append("xhtml:body")
         .style("text-align", "center")
         .style("color", nodeTxtColor)
+        .style("font-size", "12px")
+        .style("background-color", "transparent")
         .html(function (d) {
             return d.properties.name
         });
