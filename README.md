@@ -12,7 +12,7 @@ representations.
 
 - [ ] drawCanvas
 
-- [ ] setNodeBgColor
+- [ ] setnodeFillColor
 - [ ] setNodeRadius
 - [ ] setNodeBorderColor
 - [ ] setNodeTagImage - one of the right bottom of node.

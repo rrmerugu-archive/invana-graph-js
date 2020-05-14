@@ -1,136 +1,6 @@
-const svg = d3.select('#mySVG')
-const nodesG = svg.select("g.nodes")
-const linksG = svg.select("g.links")
 
 
-const nodeRadius = 24;
-// const nodeBorderWidth = 3;
-const nodeBgColor = "#999999";
-const nodeBorderColor = "#506d4d";
-const nodeBorderWidth = 5;
-
-const linkDistance = 300;
-const linkCurvature = .55;
-
-var graphs = {
-    "nodes": [
-        {
-            "name": "Moon",
-            "label": "Planet",
-
-            "id": 1
-        },
-        {
-            "name": "Earth",
-            "label": "Planet",
-            "id": 2
-        },
-        {
-            "name": "Mars",
-            "label": "Planet",
-            "id": 3
-        },
-        {
-            "name": "Jupiter",
-            "label": "Planet",
-            "id": 4
-        }, {
-            "name": "Europa",
-            "label": "Satellite",
-            "id": 4
-        }, {
-            "name": "Lo",
-            "label": "Satellite",
-            "id": 4
-        }, {
-            "name": "Dia",
-            "label": "Satellite",
-            "id": 4
-        }
-    ],
-    "links": [{
-        "source": 1,
-        "target": 2,
-        "type": "KNOWS 1.2.1",
-        "since": 2010
-    }, {
-        "source": 2,
-        "target": 1,
-        "type": "knows 1.2.2",
-        "since": 2010
-    }, {
-        "source": 1,
-        "target": 2,
-        "type": "knows 1.2.3",
-        "since": 2010
-    }, {
-        "source": 1,
-        "target": 2,
-        "type": "knows 1.2.4",
-        "since": 2010
-    },
-        {
-            "source": 1,
-            "target": 2,
-            "type": "knows 1.2.5",
-            "since": 2010
-        },
-
-        {
-            "source": 1,
-            "target": 3,
-            "type": "ALSO knows 3",
-            "since": 2010
-        }, {
-            "source": 1,
-            "target": 4,
-            "type": "ALSO knows 4.1.1",
-            "since": 2010
-        }, {
-            "source": 1,
-            "target": 4,
-            "type": "ALSO knows 4.1.2",
-            "since": 2010
-        }, {
-            "source": 2,
-            "target": 4,
-            "type": "ALSO knows 4.3",
-            "since": 2010
-        },
-
-    ]
-}
-
-
-graphs.links.forEach(function (link) {
-
-    // find other links with same target+source or source+target
-
-
-    let same = graphs.links.filter(function (v, i) {
-        return ((v.source === link.source && v.target === link.target));
-    })
-    let sameAlt = graphs.links.filter(function (v, i) {
-        return ((v.source === link.target && v.target === link.source));
-    })
-
-    let sameAll = same.concat(sameAlt);
-    sameAll.forEach(function (s, i) {
-
-        s.sameIndex = (i + 1);
-        s.sameTotal = sameAll.length;
-        s.sameTotalHalf = (s.sameTotal / 2);
-        s.sameUneven = ((s.sameTotal % 2) !== 0);
-        s.sameMiddleLink = ((s.sameUneven === true) && (Math.ceil(s.sameTotalHalf) === s.sameIndex));
-        s.sameLowerHalf = (s.sameIndex <= s.sameTotalHalf);
-        s.sameArcDirection = s.sameLowerHalf ? 0 : 1;
-        s.sameIndexCorrected = s.sameLowerHalf ? s.sameIndex : (s.sameIndex - Math.ceil(s.sameTotalHalf));
-
-        if (s.sameIndexCorrected === 2) {
-            s.sameArcDirection = 1;
-        }
-    });
-});
+graphs.links = prepareLinksDataForCurves(graphs.links);
 
 graphs.links.sort(function (a, b) {
     if (a.sameTotal < b.sameTotal) return -1;
@@ -151,21 +21,20 @@ svg.append("svg:defs").selectAll("marker")
     .enter().append("svg:marker")
     .attr("id", (d, i) => "link-arrow-" + i)
     .attr("viewBox", "0 -5 10 10")
-    .attr("refX", (d, i) => (nodeRadius - nodeRadius / 5)
+    .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth)
     )
     .attr("refY", 0)
-    .attr("markerWidth", nodeRadius)
-    .attr("markerHeight", nodeRadius)
+    .attr("markerWidth", 10)
+    .attr("markerHeight", 10)
     .attr("orient", "auto")
     .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
 
 const htmtSelector = document.querySelector("#mySVG");
 const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(d => d.id))
+    // .force("link", d3.forceLink().id(d => d.id))
     .force("center", d3.forceCenter(htmtSelector.clientWidth / 2, htmtSelector.clientHeight / 2))
-    .force('link', d3.forceLink().id(d => d.id).distance(100))
-    .force('charge', d3.forceManyBody().strength(-50))
+    .force('charge', d3.forceManyBody().strength(-500))
     .force('collide', d3.forceCollide(25));
 
 
@@ -193,9 +62,9 @@ const linkPaths = links
     .attr("sameIndexCorrected", function (d, i) {
         return d.sameIndexCorrected;
     })
-    .attr('stroke', '#444444')
+    .attr('stroke', linkFillColor)
     // .attr('opacity', 0.75)
-    .attr("stroke-width", 1)
+    .attr("stroke-width", linkStrokeWidth)
     .attr("fill", "transparent")
     .attr('marker-end', (d, i) => 'url(#link-arrow-' + i + ')');
 
@@ -209,10 +78,10 @@ const linkText = links
     .style("text-anchor", "middle")
 
     .attr("startOffset", "50%")
-    .attr('stroke', '#444444')
+    .attr('stroke', linkTextColor)
     // .attr('fill', '#ffffff')
     // .attr('opacity', 1)
-    .text((d, i) => `${d.type}`);
+    .text((d, i) => `${d.label || d.id}`);
 
 const nodes = nodesG
     .selectAll("g")
@@ -229,21 +98,21 @@ const nodes = nodesG
 
 const circles = nodes.append("circle")
     .attr("r", nodeRadius)
-    .attr("fill", nodeBgColor)
+    .attr("fill", nodeFillColor)
     .attr("stroke", nodeBorderColor)
-    .attr("stroke-width", nodeBorderWidth);
+    .attr("stroke-width", nodeStrokeWidth);
 
 // .attr("opacity", "0.3")
 
 nodes.append("title")
     .text(function (d) {
-        return d.label;
+        return d.properties.name || d.id;
     })
 nodes.append("text")
     .attr("dy", -16)
     .attr("dx", 6)
     .text(function (d) {
-        return d.label || d.id;
+        return d.properties.name || d.id;
     })
     .style("fill", function (d, i) {
         return "#c1c1c1";
