@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <style>
         * {
@@ -22,32 +23,76 @@
 <svg id="graphCanvas" width="100%" height="100%"></svg>
 </body>
 <script src="/src/config.js"></script>
-<script src="/src/node-functions.js"></script>
-<script src="/src/link-functions.js"></script>
+<script src="/src/canvas-utils.js"></script>
 <script src="/src/canvas.js"></script>
 <script>
 
-    let links = graphs.links;
-    let nodes = graphs.nodes;
+    const links = Object.assign([], graphs.links);
+    const nodes = Object.assign([], graphs.nodes);
+    const showNodeLabels = true;
+    const showLinkLabels = true;
     let canvasHTMLSelector = "#graphCanvas";
 
 
+    function onNodeClick() {
+        console.log("onNodeClick triggered")
+    }
+
+    function onNodeMouseOver() {
+        console.log("onNodeMouseOver triggered")
+    }
+
+    function onNodeMouseOut() {
+        console.log("onNodeMouseOut triggered")
+    }
 
 
-    function onNodeClick()  { console.log("onNodeClick triggered") };
-    function onNodeMouseOver()  { console.log("onNodeMouseOver triggered") };
-    function onNodeMouseOut()  { console.log("onNodeMouseOut triggered") };
+    function onLinkClick() {
+        console.log("onLinkClick triggered")
+    }
+
+    function onLinkMouseOver() {
+        console.log("onLinkMouseOver triggered")
+    }
+
+    function onLinkMouseOut() {
+        console.log("onLinkMouseOut triggered")
+    }
 
 
-    function onLinkClick()  { console.log("onLinkClick triggered") };
-    function onLinkMouseOver()  { console.log("onLinkMouseOver triggered") };
-    function onLinkMouseOut()  { console.log("onLinkMouseOut triggered") };
+    const nodeOptions = {
+        "Planet": {
+            "bgImagePropertyKey": "image",
+            "showLabel": true,
+            "nodeShapeOptions": {
+                "radius": "30",
+                "strokeWidth": "4px",
+                "fillColor": "#efefef"
+            }
+
+        },
+        "Satellite": {
+            "bgImageUrl": "https://cdn2.iconfinder.com/data/icons/space-82/64/asteroid-2-512.png",
+            "showLabel": false,
+            "nodeShapeOptions": {
+                "radius": "20",
+                "strokeWidth": "2px",
+                "strokeColor": "#333333",
+                "fillColor": "#efefef",
+                "centerHTMLFn": (node) => node.properties.name.splice(0, 2),
+                "labelTextFn": (node) => node.properties.name,
+            }
+        }
+    }
+
+    const nodesData = prepareNodesDataWithOptions(nodes, nodeOptions);
+    const linksData = prepareLinksDataForCurves(links);
 
 
-
+    console.log("nodesData", nodesData)
     canvas = new InvanaGraphUI(canvasHTMLSelector,
-        nodes,
-        links,
+        nodesData,
+        linksData,
 
         onNodeClick,
         onNodeMouseOver,
@@ -55,9 +100,10 @@
 
         onLinkClick,
         onLinkMouseOver,
-        onLinkMouseOut
+        onLinkMouseOut,
 
-
+        showNodeLabels,
+        showLinkLabels
     );
 </script>
 </html>

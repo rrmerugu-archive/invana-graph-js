@@ -8,7 +8,10 @@ function InvanaGraphUI(canvasHTMLSelector,
                        // link methods
                        onLinkClick,
                        onLinkMouseOver,
-                       onLinkMouseOut
+                       onLinkMouseOut,
+                       // show or hide labels
+                       showNodeLabels,
+                       showLinkLabels
 ) {
 
     const svg = d3.select(canvasHTMLSelector);
@@ -18,7 +21,6 @@ function InvanaGraphUI(canvasHTMLSelector,
     const htmlSelector = document.querySelector(canvasHTMLSelector);
     const clientWidth = htmlSelector.clientWidth;
     const clientHeight = htmlSelector.clientHeight;
-    linksData = prepareLinksDataForCurves(linksData);
 
 
     const simulation = d3.forceSimulation()
@@ -107,44 +109,45 @@ function InvanaGraphUI(canvasHTMLSelector,
 
 
     nodes.append("circle")
-        .attr("r", nodeRadius)
-        .attr("fill", function (d) {
-            return nodeFillColor
-        })
-        .attr("stroke", nodeStrokeColor)
-        .attr("stroke-width", nodeStrokeWidth);
+        .attr("r", (d) => d.meta.nodeShapeOptions.radius)
+        .attr("fill", (d) => d.meta.nodeShapeOptions.fillColor)
+    // .attr("stroke", (d) => d.meta.nodeShapeOptions.strokeColor)
+    // .attr("stroke-width", (d) => d.meta.nodeShapeOptions.strokeWidth);
 
     const circles = nodes.append("circle")
-        .attr("r", nodeRadius)
+        .attr("r", (d) => d.meta.nodeShapeOptions.radius)
         .attr("fill", function (d) {
             if (d.meta && d.meta.bgImageUrl) {
                 return "url(#pattern-node-" + d.id + ")";
             } else {
-                return nodeFillColor
+                return d.meta.nodeShapeOptions.fillColor
             }
         })
-        .attr("stroke", nodeStrokeColor)
-        .attr("stroke-width", nodeStrokeWidth);
+        .attr("stroke", (d) => d.meta.nodeShapeOptions.strokeColor)
+        .attr("stroke-width", (d) => d.meta.nodeShapeOptions.strokeWidth);
 
-    const side = 2 * nodeRadius * Math.cos(Math.PI / 4);
-    const dx = nodeRadius - (side / 2) * (2.5);
-    const dy = nodeRadius - (side / 2) * (2.5) * (2.5 / 3);
 
     nodes.append('g')
-        .attr('transform', 'translate(' + [dx, dy] + ')')
+        .attr('transform', function (d) {
+                const side = 2 * d.meta.nodeShapeOptions.radius * Math.cos(Math.PI / 4);
+                const dx = d.meta.nodeShapeOptions.radius - (side / 2) * (2.5);
+                const dy = d.meta.nodeShapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3);
+                return 'translate(' + [dx, dy] + ')'
+            }
+        )
         .append("foreignObject")
-        .attr("width", side)
+        .attr("width", (d) => 2 * d.meta.nodeShapeOptions.radius * Math.cos(Math.PI / 4)) // side
         .style("font-size", function (d) {
             return "12px";
         })
-        .attr("height", side)
+        .attr("height", (d) => 2 * d.meta.nodeShapeOptions.radius * Math.cos(Math.PI / 4)) // side
         .append("xhtml:body")
         .style("text-align", "center")
-        .style("color", nodeTxtColor)
+        .style("color", (d) => d.meta.nodeShapeOptions.textColor)
         .style("font-size", "12px")
         .style("background-color", "transparent")
         .html(function (d) {
-            return d.properties.name
+            return d.meta.centerHTML
         });
 
     nodes.append('svg:defs').append('svg:pattern')
@@ -152,58 +155,64 @@ function InvanaGraphUI(canvasHTMLSelector,
             return "pattern-node-" + d.id + "";
         })
         .attr('patternUnits', 'objectBoundingBox')
-        .attr('width', nodeRadius * 2)
-        .attr('height', nodeRadius * 2)
+        .attr('width', (d) => (d.meta.nodeShapeOptions.radius * 2) + 4)
+        .attr('height', (d) => (d.meta.nodeShapeOptions.radius * 2) + 4)
         .append('svg:image')
         .attr("xlink:href", function (d) {
             if (d.meta && d.meta.bgImageUrl) {
                 return d.meta.bgImageUrl;
             }
         })
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', nodeRadius * 2)
-        .attr('height', nodeRadius * 2);
+        .attr('x', -2)
+        .attr('y', -2)
+        .attr('width', (d) => (d.meta.nodeShapeOptions.radius * 2) + 4)
+        .attr('height', (d) => (d.meta.nodeShapeOptions.radius * 2) + 4);
 
 
-    /*
-
-    // DON'T DELETE this -
     nodes.append("title")
         .text(function (d) {
-            return d.properties.name || d.id;
+            return d.meta.labelText || d.id;
         })
     nodes.append("text")
         .attr("dy", -16)
         .attr("dx", 6)
         .text(function (d) {
-            return d.properties.name || d.id;
+            return d.meta.labelText || d.id;
         })
-        .style("fill", function (d, i) {
-            return nodeTxtColor;
-        })
+        .attr("stroke", (d) => d.meta.nodeShapeOptions.labelColor)
+        .attr("fill", (d) => d.meta.nodeShapeOptions.labelColor)
         .style("font-size", function (d, i) {
             return "12px";
         })
         .style("font-weight", function (d, i) {
             return "bold";
         })
+        .style("display", (d) => (d.meta.showLabel) ? "block" : "none")
         .style("text-shadow", function (d, i) {
-            return "1px 1px #424242";
+            return "1px 1px " + d3.rgb(d.meta.nodeShapeOptions.labelColor).darker(1);
         });
-*/
+
+
     everything.append("svg:defs").selectAll("marker")
         .data(linksData)
-        .enter().append("svg:marker")
+        .enter()
+        .append("svg:marker")
         .attr("id", (d, i) => "link-arrow-" + i)
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth))
         .attr("refY", 0)
+        .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth))
+        // .attr("refX", (d, i) => (d.meta.nodeShapeOptions.radius - (d.meta.nodeShapeOptions.radius / 4) +
+        //       d.meta.nodeShapeOptions.strokeWidth))
+        //
+        // .attr("fill", (d) => d.meta.nodeShapeOptions.fillColor)
+        // .attr("stroke", (d) => d.meta.nodeShapeOptions.strokeColor)
+        .attr("fill", (d) => linkFillColor)
+        .attr("stroke", (d) => linkFillColor)
+
         .attr("markerWidth", 10)
         .attr("markerHeight", 10)
         .attr("orient", "auto")
-        .attr("fill", linkFillColor)
-        .attr("stroke", linkFillColor)
+
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5");
 
