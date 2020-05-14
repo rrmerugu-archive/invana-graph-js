@@ -22,17 +22,15 @@
 <div class=""></div>
 <svg id="graphCanvas" width="100%" height="100%"></svg>
 </body>
-<script src="/src/config.js"></script>
+<script src="/src/example-data.js"></script>
 <script src="/src/canvas-utils.js"></script>
 <script src="/src/canvas.js"></script>
 <script>
 
     const links = Object.assign([], graphs.links);
     const nodes = Object.assign([], graphs.nodes);
-    const showNodeLabels = true;
-    const showLinkLabels = true;
-    let canvasHTMLSelector = "#graphCanvas";
 
+    let canvasHTMLSelector = "#graphCanvas";
 
     function onNodeClick() {
         console.log("onNodeClick triggered")
@@ -63,8 +61,12 @@
     const nodeOptions = {
         "Planet": {
             "bgImagePropertyKey": "image",
-            "showLabel": true,
-            "nodeShapeOptions": {
+            "labelOptions": {
+                "showLabel": true,
+                "labelTextFn": (node) => "Planet " + node.properties.name,
+                "labelColor": "#999999"
+            },
+            "shapeOptions": {
                 "radius": "30",
                 "strokeWidth": "4px",
                 "fillColor": "#efefef"
@@ -72,15 +74,21 @@
 
         },
         "Satellite": {
-            "bgImageUrl": "https://cdn2.iconfinder.com/data/icons/space-82/64/asteroid-2-512.png",
-            "showLabel": false,
-            "nodeShapeOptions": {
+                        "bgImagePropertyKey": "image",
+
+            // "bgImageUrl": "https://cdn2.iconfinder.com/data/icons/space-82/64/asteroid-2-512.png",
+            "labelOptions": {
+                "showLabel": true,
+                "labelTextFn": (node) => node.properties.name,
+                "labelColor": "#999999"
+            },
+            "shapeOptions": {
                 "radius": "20",
                 "strokeWidth": "2px",
                 "strokeColor": "#333333",
                 "fillColor": "#efefef",
-                "centerHTMLFn": (node) => node.properties.name.splice(0, 2),
-                "labelTextFn": (node) => node.properties.name,
+                "inShapeHTMLFn": (node) => node.properties.name.substring(0, 3)
+                ,
             }
         }
     }
@@ -101,9 +109,6 @@
         onLinkClick,
         onLinkMouseOver,
         onLinkMouseOut,
-
-        showNodeLabels,
-        showLinkLabels
     );
 </script>
 </html>

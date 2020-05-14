@@ -1,3 +1,23 @@
+// generic
+const showLabelDefaultChoice = true;
+
+// node specific
+const nodeRadius = 24;
+const nodeFillColor = "#333333";
+const nodeTxtColor = "#c92e2e";
+const nodeStrokeColor = "#4385b8";
+const nodeStrokeWidth = 5;
+const nodeLabelColor = "#4bd02d"
+const nodeLabelBgColor = "#333333";
+
+// link specific
+const linkDistance = 300;
+const linkCurvature = .55;
+const linkStrokeWidth = '2px';
+const linkFillColor = "#727272";
+const linkTextColor = "#727272";
+
+
 function prepareLinksDataForCurves(links) {
     /*
     This method will set attributes on to the links that will
@@ -61,7 +81,7 @@ function prepareNodesDataWithOptions(nodes, options) {
             "Planet": {
                 "bgImagePropertyKey": "image",
                 "nodeShape": "circle",
-                "nodeShapeOptions": {
+                "shapeOptions": {
                     "radius": "20",
                     "strokeWidth": "2px",
                     "strokeColor": "#333333",
@@ -71,7 +91,7 @@ function prepareNodesDataWithOptions(nodes, options) {
              "Satellite": {
                 "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png",
                 "nodeShape": "circle",
-                "nodeShapeOptions": {
+                "shapeOptions": {
                     "radius": "20",
                     "strokeWidth": "2px",
                     "strokeColor": "#333333",
@@ -86,8 +106,10 @@ function prepareNodesDataWithOptions(nodes, options) {
         options = {};
     }
 
-    nodes.forEach(function (node, index) {
+    let nodesCleaned = [];
+    nodes.forEach(function (nodeData, index) {
 
+        let node = Object.assign({}, nodeData)
         // check if options data has node.label meta data or set defaults.
         if (node.label in options) {
             node.meta = Object.assign({}, options[node.label]);
@@ -95,49 +117,57 @@ function prepareNodesDataWithOptions(nodes, options) {
         if (!node.meta) {
             node.meta = {"bgImageUrl": null, "nodeShape": "circle"};
         }
-        if (!node.meta.nodeShapeOptions) {
-            node.meta.nodeShapeOptions = {}
+        if (!node.meta.shapeOptions) {
+            node.meta.shapeOptions = {}
         }
+
+
+        // shapeOptions
+        if (!node.meta.shapeOptions.radius) {
+            node.meta.shapeOptions.radius = nodeRadius
+        }
+        if (!node.meta.shapeOptions.strokeWidth) {
+            node.meta.shapeOptions.strokeWidth = nodeStrokeWidth
+        }
+        if (!node.meta.shapeOptions.strokeColor) {
+            node.meta.shapeOptions.strokeColor = nodeStrokeColor
+        }
+        if (!node.meta.shapeOptions.fillColor) {
+            node.meta.shapeOptions.fillColor = nodeFillColor
+        }
+        if (!node.meta.shapeOptions.textColor) {
+            node.meta.shapeOptions.textColor = nodeTxtColor
+        }
+
+        if (!node.meta.shapeOptions.labelBgColor) {
+            node.meta.shapeOptions.labelBgColor = nodeLabelBgColor
+        }
+        if (node.meta.shapeOptions.inShapeHTMLFn) {
+            node.meta.shapeOptions.inShapeHTML = node.meta.shapeOptions.inShapeHTMLFn(node);
+        }
+
+        // nodeLabelOptions
+        if (!node.meta.labelOptions) {
+            node.meta.labelOptions = {}
+        }
+        if (typeof node.meta.labelOptions.showLabel === "undefined") {
+            node.meta.labelOptions.showLabel = showLabelDefaultChoice
+        }
+        if (node.meta.labelOptions.labelTextFn) {
+            node.meta.labelOptions.labelText = node.meta.labelOptions.labelTextFn(node);
+        } else {
+            node.meta.labelOptions.labelText = node.properties.name || node.id;
+        }
+        if (!node.meta.labelOptions.labelColor) {
+            node.meta.labelOptions.labelColor = nodeLabelColor;
+        }
+
+        // nodeImageOptions
         if (node.meta.bgImagePropertyKey) {
             node.meta.bgImageUrl = node.properties[node.meta.bgImagePropertyKey];
         }
-        if (typeof node.meta.showLabel === "undefined") {
-            node.meta.showLabel = showLabelDefaultChoice
-        }
-
-        if (!node.meta.nodeShapeOptions.radius) {
-            node.meta.nodeShapeOptions.radius = nodeRadius
-        }
-        if (!node.meta.nodeShapeOptions.strokeWidth) {
-            node.meta.nodeShapeOptions.strokeWidth = nodeStrokeWidth
-        }
-        if (!node.meta.nodeShapeOptions.strokeColor) {
-            node.meta.nodeShapeOptions.strokeColor = nodeStrokeColor
-        }
-        if (!node.meta.nodeShapeOptions.fillColor) {
-            node.meta.nodeShapeOptions.fillColor = nodeFillColor
-        }
-        if (!node.meta.nodeShapeOptions.textColor) {
-            node.meta.nodeShapeOptions.textColor = nodeTxtColor
-        }
-        if (!node.meta.nodeShapeOptions.labelColor) {
-            node.meta.nodeShapeOptions.labelColor = nodeLabelColor;
-        }
-
-        if (!node.meta.nodeShapeOptions.labelBgColor) {
-            node.meta.nodeShapeOptions.labelBgColor = nodeLabelBgColor
-        }
-
-
-        if (node.meta.centerHTMLFn) {
-            node.meta.centerHTML = node.meta.centerHTMLFn(node);
-        }
-        if (node.meta.labelTextFn) {
-            node.meta.labelText = node.meta.labelTextFn(node);
-        } else {
-            node.meta.labelText = node.properties.name
-        }
+        nodesCleaned.push(JSON.parse(JSON.stringify(node)))
     });
 
-    return nodes;
+    return nodesCleaned;
 }

@@ -22,7 +22,7 @@ representations.
         "meta": {
             "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png",
             "nodeShape": "circle",
-            "nodeShapeOptions": {
+            "shapeOptions": {
                 "radius": "14px",
                 "strokeWidth": "2px",
                 "strokeColor": "#333333",
