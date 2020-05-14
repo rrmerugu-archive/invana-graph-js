@@ -2,8 +2,6 @@ function prepareLinksDataForCurves(links) {
     links.forEach(function (link) {
 
         // find other links with same target+source or source+target
-
-
         let same = graphs.links.filter(function (v, i) {
             return ((v.source === link.source && v.target === link.target));
         })
@@ -13,7 +11,6 @@ function prepareLinksDataForCurves(links) {
 
         let sameAll = same.concat(sameAlt);
         sameAll.forEach(function (s, i) {
-
             s.sameIndex = (i + 1);
             s.sameTotal = sameAll.length;
             s.sameTotalHalf = (s.sameTotal / 2);
@@ -26,9 +23,22 @@ function prepareLinksDataForCurves(links) {
             if (s.sameIndexCorrected === 2) {
                 s.sameArcDirection = 1;
             }
+            if (s.sameIndexCorrected === 1) {
+                s.sameArcDirection = 0;
+            }
         });
+    });
 
+    links.sort(function (a, b) {
+        if (a.sameTotal < b.sameTotal) return -1;
+        if (a.sameTotal > b.sameTotal) return 1;
+        return 0;
+    });
 
+    const maxSame = links[links.length - 1].sameTotal;
+
+    links.forEach(function (link, i) {
+        links[i].maxSameHalf = Math.round(maxSame / 3);
     });
     return links
 }

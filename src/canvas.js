@@ -1,19 +1,10 @@
 
+const svg = d3.select('#mySVG')
+const nodesG = svg.select("g.nodes")
+const linksG = svg.select("g.links")
+const htmlSelector = document.querySelector("#mySVG");
 
 graphs.links = prepareLinksDataForCurves(graphs.links);
-
-graphs.links.sort(function (a, b) {
-    if (a.sameTotal < b.sameTotal) return -1;
-    if (a.sameTotal > b.sameTotal) return 1;
-    return 0;
-});
-
-console.log("graphs.links", graphs.links)
-var maxSame = graphs.links[graphs.links.length - 1].sameTotal;
-
-graphs.links.forEach(function (link, i) {
-    graphs.links[i].maxSameHalf = Math.round(maxSame / 3);
-});
 
 
 svg.append("svg:defs").selectAll("marker")
@@ -30,12 +21,11 @@ svg.append("svg:defs").selectAll("marker")
     .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
 
-const htmtSelector = document.querySelector("#mySVG");
 const simulation = d3.forceSimulation()
     // .force("link", d3.forceLink().id(d => d.id))
-    .force("center", d3.forceCenter(htmtSelector.clientWidth / 2, htmtSelector.clientHeight / 2))
+    .force("center", d3.forceCenter(htmlSelector.clientWidth / 2, htmlSelector.clientHeight / 2))
     .force('charge', d3.forceManyBody().strength(-500))
-    .force('collide', d3.forceCollide(25));
+    .force('collide', d3.forceCollide(20));
 
 
 let linksData = graphs.links.map(link => {

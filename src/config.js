@@ -1,6 +1,3 @@
-const svg = d3.select('#mySVG')
-const nodesG = svg.select("g.nodes")
-const linksG = svg.select("g.links")
 
 
 const nodeRadius = 24;
@@ -73,6 +70,13 @@ let graphs = {
             "label": "has_satellite",
             "properties": {
                 "distance": "xyz kilometers"
+            }
+        },
+            {
+            "source": 1,
+            "target": 2,
+            "label": "tidally_locked",
+            "properties": {
             }
         },
         {
