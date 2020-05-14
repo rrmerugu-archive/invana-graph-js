@@ -1,5 +1,3 @@
-
-
 const nodeRadius = 24;
 const nodeFillColor = "#999999";
 const nodeBorderColor = "#506d4d";

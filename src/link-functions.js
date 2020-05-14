@@ -40,5 +40,13 @@ function prepareLinksDataForCurves(links) {
     links.forEach(function (link, i) {
         links[i].maxSameHalf = Math.round(maxSame / 3);
     });
-    return links
+
+
+    let linksSourceTargetMapped = links.map(link => {
+    let obj = link;
+    obj.source = link.source;
+    obj.target = link.target;
+    return obj;
+})
+    return linksSourceTargetMapped
 }

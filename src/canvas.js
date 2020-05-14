@@ -1,7 +1,7 @@
 
-const svg = d3.select('#mySVG')
-const nodesG = svg.select("g.nodes")
-const linksG = svg.select("g.links")
+const svg = d3.select('#mySVG');
+const nodesG = svg.select("g.nodes");
+const linksG = svg.select("g.links");
 const htmlSelector = document.querySelector("#mySVG");
 
 graphs.links = prepareLinksDataForCurves(graphs.links);
@@ -28,12 +28,7 @@ const simulation = d3.forceSimulation()
     .force('collide', d3.forceCollide(20));
 
 
-let linksData = graphs.links.map(link => {
-    var obj = link;
-    obj.source = link.source;
-    obj.target = link.target;
-    return obj;
-})
+
 
 const links = linksG
     .selectAll("g")
@@ -121,7 +116,7 @@ simulation
     .nodes(graphs.nodes)
     .on("tick", ticked);
 
-simulation.force("link", d3.forceLink().links(linksData)
+simulation.force("link", d3.forceLink().links(graphs.links)
     .id((d, i) => d.id)
     .distance(linkDistance));
 
