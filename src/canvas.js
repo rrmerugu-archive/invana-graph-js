@@ -1,15 +1,18 @@
 function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
 
     const svg = d3.select(canvasHTMLSelector);
-    const linksG = svg.append("g").attr("class", "links");
-    const nodesG = svg.append("g").attr("class", "nodes");
+    const everything = svg.append("g").attr("class", "everything");
+    const linksG = everything.append("g").attr("class", "links");
+    const nodesG = everything.append("g").attr("class", "nodes");
     const htmlSelector = document.querySelector(canvasHTMLSelector);
+    const clientWidth  = htmlSelector.clientWidth ;
+    const clientHeight  = htmlSelector.clientHeight ;
     linksData = prepareLinksDataForCurves(linksData);
 
 
     const simulation = d3.forceSimulation()
         // .force("link", d3.forceLink().id(d => d.id))
-        .force("center", d3.forceCenter(htmlSelector.clientWidth / 2, htmlSelector.clientHeight / 2))
+        .force("center", d3.forceCenter(clientWidth/ 2, clientHeight / 2))
         .force('charge', d3.forceManyBody().strength(0))
         .force('collide', d3.forceCollide(100));
 
@@ -90,7 +93,7 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
             return "1px 1px #424242";
         });
 
-    svg.append("svg:defs").selectAll("marker")
+    everything.append("svg:defs").selectAll("marker")
         .data(linksData)
         .enter().append("svg:marker")
         .attr("id", (d, i) => "link-arrow-" + i)
@@ -147,4 +150,16 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         d.fx = null;
         d.fy = null;
     }
+
+
+    svg.call(d3.zoom()
+        .extent([[0, 0], [clientWidth, clientHeight]])
+        // .scaleExtent([1, 8])
+        .on("zoom", zoomed));
+
+    function zoomed() {
+        everything.attr("transform", d3.event.transform);
+    }
+
+
 }
