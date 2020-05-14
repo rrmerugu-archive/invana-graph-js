@@ -25,7 +25,7 @@ const simulation = d3.forceSimulation()
     // .force("link", d3.forceLink().id(d => d.id))
     .force("center", d3.forceCenter(htmlSelector.clientWidth / 2, htmlSelector.clientHeight / 2))
     .force('charge', d3.forceManyBody().strength(0))
-    .force('collide', d3.forceCollide(50));
+    .force('collide', d3.forceCollide(100));
 
 
 
