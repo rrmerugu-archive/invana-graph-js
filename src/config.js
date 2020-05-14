@@ -1,13 +1,13 @@
 const nodeRadius = 24;
 const nodeFillColor = "#999999";
-const nodeBorderColor = "#506d4d";
+const nodeStrokeColor = "#444444";
 const nodeStrokeWidth = 5;
 
 const linkDistance = 300;
 const linkCurvature = .55;
 const linkStrokeWidth = '2px';
-const linkFillColor = "#999999";
-const linkTextColor = "#999999";
+const linkFillColor = "#444444";
+const linkTextColor = "#444444";
 
 let graphs = {
     "nodes": [

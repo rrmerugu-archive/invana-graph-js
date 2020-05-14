@@ -14,7 +14,7 @@ representations.
 
 - [ ] setnodeFillColor
 - [ ] setNodeRadius
-- [ ] setNodeBorderColor
+- [ ] setnodeStrokeColor
 - [ ] setNodeTagImage - one of the right bottom of node.
 - [ ] setNodeCenterText
 - [ ] setNodeLabel

@@ -66,7 +66,7 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
     const circles = nodes.append("circle")
         .attr("r", nodeRadius)
         .attr("fill", nodeFillColor)
-        .attr("stroke", nodeBorderColor)
+        .attr("stroke", nodeStrokeColor)
         .attr("stroke-width", nodeStrokeWidth);
 
 
