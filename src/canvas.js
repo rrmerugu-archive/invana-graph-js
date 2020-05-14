@@ -63,13 +63,26 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
             .on("drag", dragged)
             .on("end", dragEnded));
 
-    const circles = nodes.append("circle")
+    nodes.append("circle")
         .attr("r", nodeRadius)
-        .attr("fill", nodeFillColor)
+        .attr("fill", function (d) {
+            return nodeFillColor
+        })
         .attr("stroke", nodeStrokeColor)
         .attr("stroke-width", nodeStrokeWidth);
 
-// translate(-15.029437251522857,-15.029437251522857)
+    const circles = nodes.append("circle")
+        .attr("r", nodeRadius)
+        .attr("fill", function (d) {
+            if (d.meta && d.meta.bgImageUrl) {
+                return "url(#pattern-node-" + d.id + ")";
+            } else {
+                return nodeFillColor
+            }
+        })
+        .attr("stroke", nodeStrokeColor)
+        .attr("stroke-width", nodeStrokeWidth);
+
     const side = 2 * nodeRadius * Math.cos(Math.PI / 4);
     const dx = nodeRadius - (side / 2) * (2.5);
     const dy = nodeRadius - (side / 2) * (2.5) * (2.5 / 3);
@@ -84,9 +97,28 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .attr("height", side)
         .append("xhtml:body")
         .style("text-align", "center")
+        .style("color", nodeTxtColor)
         .html(function (d) {
             return d.properties.name
         });
+
+    nodes.append('svg:defs').append('svg:pattern')
+        .attr("id", function (d) {
+            return "pattern-node-" + d.id + "";
+        })
+        .attr('patternUnits', 'objectBoundingBox')
+        .attr('width', nodeRadius * 2)
+        .attr('height', nodeRadius * 2)
+        .append('svg:image')
+        .attr("xlink:href", function (d) {
+            if (d.meta && d.meta.bgImageUrl) {
+                return d.meta.bgImageUrl;
+            }
+        })
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', nodeRadius * 2)
+        .attr('height', nodeRadius * 2);
 
 
     /*

@@ -1,7 +1,7 @@
 const nodeRadius = 24;
-const nodeFillColor = "#999999";
-const nodeTxtColor= "#efefef";
-const nodeStrokeColor = "#444444";
+const nodeFillColor = "#333333";
+const nodeTxtColor = "#efefef";
+const nodeStrokeColor = "#ffffff";
 const nodeStrokeWidth = 5;
 
 const linkDistance = 300;
@@ -17,6 +17,9 @@ let graphs = {
             "id": 1,
             "properties": {
                 "name": "Moon"
+            },
+            "meta": {
+                "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png"
             }
         },
         {
@@ -24,6 +27,9 @@ let graphs = {
             "id": 2,
             "properties": {
                 "name": "Earth"
+            },
+            "meta": {
+                "bgImageUrl": "https://image.flaticon.com/icons/svg/44/44386.svg"
             }
         },
         {
@@ -71,12 +77,11 @@ let graphs = {
                 "distance": "xyz kilometers"
             }
         },
-            {
+        {
             "source": 1,
             "target": 2,
             "label": "tidally_locked",
-            "properties": {
-            }
+            "properties": {}
         },
         {
             "source": 4,
