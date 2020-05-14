@@ -1,5 +1,6 @@
 const nodeRadius = 24;
 const nodeFillColor = "#999999";
+const nodeTxtColor= "#efefef";
 const nodeStrokeColor = "#444444";
 const nodeStrokeWidth = 5;
 

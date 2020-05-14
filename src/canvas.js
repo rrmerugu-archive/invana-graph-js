@@ -5,14 +5,14 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
     const linksG = everything.append("g").attr("class", "links");
     const nodesG = everything.append("g").attr("class", "nodes");
     const htmlSelector = document.querySelector(canvasHTMLSelector);
-    const clientWidth  = htmlSelector.clientWidth ;
-    const clientHeight  = htmlSelector.clientHeight ;
+    const clientWidth = htmlSelector.clientWidth;
+    const clientHeight = htmlSelector.clientHeight;
     linksData = prepareLinksDataForCurves(linksData);
 
 
     const simulation = d3.forceSimulation()
         // .force("link", d3.forceLink().id(d => d.id))
-        .force("center", d3.forceCenter(clientWidth/ 2, clientHeight / 2))
+        .force("center", d3.forceCenter(clientWidth / 2, clientHeight / 2))
         .force('charge', d3.forceManyBody().strength(0))
         .force('collide', d3.forceCollide(100));
 
@@ -69,7 +69,29 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .attr("stroke", nodeStrokeColor)
         .attr("stroke-width", nodeStrokeWidth);
 
+// translate(-15.029437251522857,-15.029437251522857)
+    const side = 2 * nodeRadius * Math.cos(Math.PI / 4);
+    const dx = nodeRadius - (side / 2) * (2.5);
+    const dy = nodeRadius - (side / 2) * (2.5) * (2.5 / 3);
 
+    nodes.append('g')
+        .attr('transform', 'translate(' + [dx, dy] + ')')
+        .append("foreignObject")
+        .attr("width", side)
+        .style("font-size", function (d) {
+            return "12px";
+        })
+        .attr("height", side)
+        .append("xhtml:body")
+        .style("text-align", "center")
+        .html(function (d) {
+            return d.properties.name
+        });
+
+
+    /*
+
+    // DON'T DELETE this -
     nodes.append("title")
         .text(function (d) {
             return d.properties.name || d.id;
@@ -81,7 +103,7 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
             return d.properties.name || d.id;
         })
         .style("fill", function (d, i) {
-            return "#c1c1c1";
+            return nodeTxtColor;
         })
         .style("font-size", function (d, i) {
             return "12px";
@@ -92,7 +114,7 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .style("text-shadow", function (d, i) {
             return "1px 1px #424242";
         });
-
+*/
     everything.append("svg:defs").selectAll("marker")
         .data(linksData)
         .enter().append("svg:marker")
@@ -107,6 +129,7 @@ function InvanaGraphUI(canvasHTMLSelector, nodesData, linksData) {
         .attr("stroke", linkFillColor)
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5");
+
     simulation
         .nodes(nodesData)
         .on("tick", ticked);
