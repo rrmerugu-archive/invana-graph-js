@@ -7,8 +7,8 @@ const nodeStrokeWidth = 5;
 const linkDistance = 300;
 const linkCurvature = .55;
 const linkStrokeWidth = '2px';
-const linkFillColor = "#444444";
-const linkTextColor = "#444444";
+const linkFillColor = "#727272";
+const linkTextColor = "#727272";
 
 let graphs = {
     "nodes": [
