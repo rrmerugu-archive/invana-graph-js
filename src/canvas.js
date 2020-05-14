@@ -24,8 +24,8 @@ svg.append("svg:defs").selectAll("marker")
 const simulation = d3.forceSimulation()
     // .force("link", d3.forceLink().id(d => d.id))
     .force("center", d3.forceCenter(htmlSelector.clientWidth / 2, htmlSelector.clientHeight / 2))
-    .force('charge', d3.forceManyBody().strength(-500))
-    .force('collide', d3.forceCollide(20));
+    .force('charge', d3.forceManyBody().strength(0))
+    .force('collide', d3.forceCollide(50));
 
 
 
@@ -64,8 +64,6 @@ const linkText = links
 
     .attr("startOffset", "50%")
     .attr('stroke', linkTextColor)
-    // .attr('fill', '#ffffff')
-    // .attr('opacity', 1)
     .text((d, i) => `${d.label || d.id}`);
 
 const nodes = nodesG
