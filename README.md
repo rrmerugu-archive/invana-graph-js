@@ -4,6 +4,8 @@ Graph Canvas is [d3](https://d3js.org) based Graph UI library built
 at [InvanaGraph](https://invana.io) for creating beautiful Graph 
 representations.
 
+![screenshot](./screenshot.png)
+
 
 ## Features
 
