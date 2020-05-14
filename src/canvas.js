@@ -1,29 +1,50 @@
 const svg = d3.select('#mySVG')
 const nodesG = svg.select("g.nodes")
 const linksG = svg.select("g.links")
-const nodeRadius = 12;
+
+
+const nodeRadius = 24;
+// const nodeBorderWidth = 3;
+const nodeBgColor = "#999999";
+const nodeBorderColor = "#506d4d";
+const nodeBorderWidth = 5;
+
 const linkDistance = 300;
 const linkCurvature = .55;
 
 var graphs = {
-    "nodes": [{
-        "name": "Peter",
-        "label": "Person 1",
-        "id": 1
-    },
+    "nodes": [
         {
-            "name": "Michael",
-            "label": "Person 2",
+            "name": "Moon",
+            "label": "Planet",
+
+            "id": 1
+        },
+        {
+            "name": "Earth",
+            "label": "Planet",
             "id": 2
         },
         {
-            "name": "Michael",
-            "label": "Person 3",
+            "name": "Mars",
+            "label": "Planet",
             "id": 3
         },
         {
-            "name": "Michael",
-            "label": "Person 4",
+            "name": "Jupiter",
+            "label": "Planet",
+            "id": 4
+        }, {
+            "name": "Europa",
+            "label": "Satellite",
+            "id": 4
+        }, {
+            "name": "Lo",
+            "label": "Satellite",
+            "id": 4
+        }, {
+            "name": "Dia",
+            "label": "Satellite",
             "id": 4
         }
     ],
@@ -130,7 +151,8 @@ svg.append("svg:defs").selectAll("marker")
     .enter().append("svg:marker")
     .attr("id", (d, i) => "link-arrow-" + i)
     .attr("viewBox", "0 -5 10 10")
-    .attr("refX", (nodeRadius * 1.5))
+    .attr("refX", (d, i) => (nodeRadius - nodeRadius / 5)
+    )
     .attr("refY", 0)
     .attr("markerWidth", nodeRadius)
     .attr("markerHeight", nodeRadius)
@@ -204,14 +226,12 @@ const nodes = nodesG
         .on("drag", dragged)
         .on("end", dragEnded));
 
-const nodeBgColor = "#333333";
-const nodeBorderColor = "#e48a8a";
-const nodeStrokWidth = "2px";
+
 const circles = nodes.append("circle")
     .attr("r", nodeRadius)
     .attr("fill", nodeBgColor)
     .attr("stroke", nodeBorderColor)
-    .attr("stroke-width", nodeStrokWidth);
+    .attr("stroke-width", nodeBorderWidth);
 
 // .attr("opacity", "0.3")
 
