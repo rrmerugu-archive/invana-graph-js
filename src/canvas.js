@@ -131,7 +131,34 @@ function InvanaGraphUI(
 
         .style("color", (d) => d.meta.shapeOptions.textColor)
         .style("background-color", "transparent")
-        .style("padding-top", (d)=> d.meta.shapeOptions.radius/ 4)
+        .style("padding-top", (d) => d.meta.shapeOptions.radius / 4)
+        .html(function (d) {
+            return d.meta.shapeOptions.inShapeHTML
+        });
+
+    nodes.append('g')
+        .attr('transform', function (d) {
+                const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4);
+                const dx = (side / 2);
+                // const dx = d.meta.shapeOptions.radius - (side / 2) * (2.5);
+                // const dy = d.meta.shapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3) - 4;
+                return 'translate(' + [dx, dx - (d.meta.shapeOptions.radius / 4) + (parseInt(d.meta.shapeOptions.strokeWidth.replace("px", "").replace("rem", "")))] + ')'
+            }
+        )
+        .append("foreignObject")
+        .attr("width", (d) => 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4)) // side
+        .style("font-size", function (d) {
+            return "12px";
+        })
+        .attr("height", (d) => 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4)) // side
+        .append("xhtml:body")
+        .style("color", (d) => d.meta.shapeOptions.textColor)
+        .style("font-size", "16px") // make this dynamic based on the node radius also
+        .style("font-weight", "bold")
+        .style("background-color", "transparent")
+        .append("xhtml:span")
+        .style("color", (d) => d.meta.shapeOptions.textColor)
+        .style("background-color", "transparent")
         .html(function (d) {
             return d.meta.shapeOptions.inShapeHTML
         });
