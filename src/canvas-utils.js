@@ -8,7 +8,7 @@ const nodeFillColor = "#333333";
 const nodeTxtColor = "#efefef";
 const nodeStrokeColor = "#4385b8";
 const nodeStrokeWidth = 5;
-const nodeLabelColor = "#4bd02d"
+const nodeLabelColor = "#ffffff"
 const nodeLabelBgColor = "#333333";
 
 // link specific

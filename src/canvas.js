@@ -87,8 +87,6 @@ function InvanaGraphUI(
         .attr("fill", (d) => d.meta.shapeOptions.fillColor)
         .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
         .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth);
-    // .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
-    // .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth);
 
 
     // for bgImageUrl
@@ -129,7 +127,7 @@ function InvanaGraphUI(
         .attr("r", (d) => d.meta.shapeOptions.radius)
         .attr("fill", "transparent")
         .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
-        .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth + 1);
+        .attr("stroke-width", (d) => parseInt(d.meta.shapeOptions.strokeWidth.replace("px", "")) + 1);
 
 
     // for nodeBgHtml
@@ -152,7 +150,7 @@ function InvanaGraphUI(
         .append("xhtml:body")
         .style("color", (d) => d.meta.shapeOptions.textColor)
         .style("font-size", "16px") // make this dynamic based on the node radius also
-        .style("font-weight", "bold")
+        // .style("font-weight", "bold")
         .style("background-color", "transparent")
         .append("xhtml:span")
         .style("text-align", "center")
@@ -186,32 +184,12 @@ function InvanaGraphUI(
         .append("xhtml:body")
         .style("color", (d) => d.meta.shapeOptions.textColor)
         .style("font-size", "16px") // make this dynamic based on the node radius also
-        .style("font-weight", "bold")
+        // .style("font-weight", "bold")
         .style("background-color", "transparent")
         .append("xhtml:span")
         .style("color", (d) => d.meta.shapeOptions.textColor)
         .style("background-color", "transparent")
-        .html(function (d) {
-            return d.meta.shapeOptions.inShapeHTML
-        });
-
-    // nodes.append('svg:defs').append('svg:pattern')
-    //     .attr("id", function (d) {
-    //         return "pattern-node-" + d.id + "";
-    //     })
-    //     .attr('patternUnits', 'objectBoundingBox')
-    //     .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-    //     .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-    //     .append('svg:image')
-    //     .attr("xlink:href", function (d) {
-    //         if (d.meta && d.meta.bgImageUrl) {
-    //             return d.meta.bgImageUrl;
-    //         }
-    //     })
-    //     .attr('x', -2)
-    //     .attr('y', -2)
-    //     .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-    //     .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4);
+        .html((d) => d.meta.shapeOptions.inShapeHTML);
 
 
     nodes.append("title")
@@ -221,17 +199,10 @@ function InvanaGraphUI(
     nodes.append("text")
         .attr("dy", -16)
         .attr("dx", 6)
-        .text(function (d) {
-            return d.meta.labelOptions.labelText || d.id;
-        })
+        .text((d) => d.meta.labelOptions.labelText || d.id)
         .attr("stroke", (d) => d.meta.labelOptions.labelColor)
         .attr("fill", (d) => d.meta.labelOptions.labelColor)
-        .style("font-size", function (d, i) {
-            return "12px";
-        })
-        .style("font-weight", function (d, i) {
-            return "bold";
-        })
+        .style("font-size", (d) => "12px")
         .style("display", (d) => (d.meta.labelOptions.showLabel) ? "block" : "none")
     // .style("text-shadow", function (d, i) {
     //     return "1px 1px " + d3.rgb(d.meta.labelOptions.labelColor).darker(1);
@@ -246,14 +217,8 @@ function InvanaGraphUI(
         .attr("viewBox", "0 -5 10 10")
         .attr("refY", 0)
         .attr("refX", (d, i) => (nodeRadius - (nodeRadius / 4) + nodeStrokeWidth))
-        // .attr("refX", (d, i) => (d.meta.shapeOptions.radius - (d.meta.shapeOptions.radius / 4) +
-        //       d.meta.shapeOptions.strokeWidth))
-        //
-        // .attr("fill", (d) => d.meta.shapeOptions.fillColor)
-        // .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
         .attr("fill", (d) => linkFillColor)
         .attr("stroke", (d) => linkFillColor)
-
         .attr("markerWidth", 10)
         .attr("markerHeight", 10)
         .attr("orient", "auto")
