@@ -81,27 +81,60 @@ function InvanaGraphUI(
         .on("mouseout", (d) => onNodeMouseOut ? onNodeMouseOut(d) : console.log("No onNodeMouseOut action set."))
         .on("click", (d) => onNodeClick ? onNodeClick(d) : console.log("No onNodeClick action set."))
 
-
+    // node first circle
     nodes.append("circle")
         .attr("r", (d) => d.meta.shapeOptions.radius)
         .attr("fill", (d) => d.meta.shapeOptions.fillColor)
+        .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
+        .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth);
     // .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
     // .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth);
 
-    const circles = nodes.append("circle")
-        .attr("r", (d) => d.meta.shapeOptions.radius)
-        .attr("fill", function (d) {
-            if (d.meta && d.meta.bgImageUrl) {
-                return "url(#pattern-node-" + d.id + ")";
-            } else {
-                return d.meta.shapeOptions.fillColor
+
+    // for bgImageUrl
+    nodes.append('g')
+        .attr("class", "bgImageUrl")
+        .attr('transform', function (d) {
+                const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4);
+                const dx = -1 * (side / 2) * 1.5;
+                // const dx = d.meta.shapeOptions.radius - (side / 2) * (2.5);
+                // const dy = d.meta.shapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3) - 4;
+                return 'translate(' + [dx, dx] + ')'
+            }
+        )
+        .append("foreignObject")
+        .attr("width", (d) => 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4) * 2) // side
+        .style("font-size", function (d) {
+            return "12px";
+        })
+        .attr("height", (d) => 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4) * 2) // side
+        .append("xhtml:body")
+
+        .style("background-color", "transparent")
+        .append("xhtml:span")
+        .style("color", (d) => d.meta.shapeOptions.textColor)
+        .style("background-color", "transparent")
+        .style("padding-top", (d) => d.meta.shapeOptions.radius / 4)
+        .html(function (d) {
+            const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4) * 1.5;
+
+            if (d.meta.bgImageUrl) {
+                return "<img src='" + d.meta.bgImageUrl + "' style='width: " + side + "px; border-radius: 3rem;' />"
             }
         })
+
+    // node bgImageUrl CAP
+    nodes.append("circle")
+        .attr("class", "bgImageUrlCap")
+        .attr("r", (d) => d.meta.shapeOptions.radius)
+        .attr("fill", "transparent")
         .attr("stroke", (d) => d.meta.shapeOptions.strokeColor)
-        .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth);
+        .attr("stroke-width", (d) => d.meta.shapeOptions.strokeWidth + 1);
 
 
+    // for nodeBgHtml
     nodes.append('g')
+        .attr("class", "nodeHTML")
         .attr('transform', function (d) {
                 const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4);
                 const dx = -1 * (side / 2);
@@ -121,9 +154,6 @@ function InvanaGraphUI(
         .style("font-size", "16px") // make this dynamic based on the node radius also
         .style("font-weight", "bold")
         .style("background-color", "transparent")
-        // .html(function (d) {
-        //     return d.meta.shapeOptions.inShapeHTML
-        // })
         .append("xhtml:span")
         .style("text-align", "center")
         .style("display", "block")
@@ -133,7 +163,9 @@ function InvanaGraphUI(
         .style("background-color", "transparent")
         .style("padding-top", (d) => d.meta.shapeOptions.radius / 4)
         .html(function (d) {
-            return d.meta.shapeOptions.inShapeHTML
+            if (d.meta.showLabel) {
+                return d.meta.shapeOptions.inShapeHTML
+            }
         });
 
     nodes.append('g')
@@ -163,23 +195,23 @@ function InvanaGraphUI(
             return d.meta.shapeOptions.inShapeHTML
         });
 
-    nodes.append('svg:defs').append('svg:pattern')
-        .attr("id", function (d) {
-            return "pattern-node-" + d.id + "";
-        })
-        .attr('patternUnits', 'objectBoundingBox')
-        .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-        .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-        .append('svg:image')
-        .attr("xlink:href", function (d) {
-            if (d.meta && d.meta.bgImageUrl) {
-                return d.meta.bgImageUrl;
-            }
-        })
-        .attr('x', -2)
-        .attr('y', -2)
-        .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
-        .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4);
+    // nodes.append('svg:defs').append('svg:pattern')
+    //     .attr("id", function (d) {
+    //         return "pattern-node-" + d.id + "";
+    //     })
+    //     .attr('patternUnits', 'objectBoundingBox')
+    //     .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
+    //     .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4)
+    //     .append('svg:image')
+    //     .attr("xlink:href", function (d) {
+    //         if (d.meta && d.meta.bgImageUrl) {
+    //             return d.meta.bgImageUrl;
+    //         }
+    //     })
+    //     .attr('x', -2)
+    //     .attr('y', -2)
+    //     .attr('width', (d) => (d.meta.shapeOptions.radius * 2) + 4)
+    //     .attr('height', (d) => (d.meta.shapeOptions.radius * 2) + 4);
 
 
     nodes.append("title")

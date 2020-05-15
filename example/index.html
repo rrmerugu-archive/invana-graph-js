@@ -60,15 +60,17 @@
 
     const nodeOptions = {
         "Planet": {
-            "bgImagePropertyKey": "image",
+            // "bgImageUrl": "https://avatars1.githubusercontent.com/u/4606947?s=400&u=368c41d46f76965633517d68925110934f60476d&v=4",
+                        "bgImagePropertyKey": "image",
+
             "labelOptions": {
                 "showLabel": true,
                 "labelTextFn": (node) => "Planet " + node.properties.name,
                 "labelColor": "#999999"
             },
             "shapeOptions": {
-                "radius": "30",
-                "strokeWidth": "4px",
+                "radius": 24,
+                "strokeWidth": "5px",
                 "fillColor": "#ba4040",
                 "inShapeHTML": "<i class=\"fas fa-globe-americas\"></i>"
 
@@ -83,8 +85,8 @@
                 "labelColor": "#999999"
             },
             "shapeOptions": {
-                "radius": "20",
-                "strokeWidth": "2px",
+                "radius": 24,
+                "strokeWidth": "5px",
                 "strokeColor": "#c4c4c4",
                 "fillColor": "#519ad2",
                 // "inShapeHTMLFn": (node) => node.properties.name.substring(0, 3)
