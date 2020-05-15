@@ -141,7 +141,7 @@ function InvanaGraphUI(canvasHTMLSelector,
         .append("xhtml:body")
         .style("text-align", "center")
         .style("color", (d) => d.meta.shapeOptions.textColor)
-        .style("font-size", "18px")
+        .style("font-size", "16") // make this dynamic based on the node radius also
         .style("font-weight", "bold")
         .style("background-color", "transparent")
         .html(function (d) {

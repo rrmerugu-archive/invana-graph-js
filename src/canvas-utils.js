@@ -4,7 +4,7 @@ const showLabelDefaultChoice = true;
 // node specific
 const nodeRadius = 24;
 const nodeFillColor = "#333333";
-const nodeTxtColor = "#c92e2e";
+const nodeTxtColor = "#adadad";
 const nodeStrokeColor = "#4385b8";
 const nodeStrokeWidth = 5;
 const nodeLabelColor = "#4bd02d"
