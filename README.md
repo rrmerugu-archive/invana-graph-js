@@ -1,14 +1,14 @@
 # Graph Canvas 
 
-Graph Canvas is [d3](https://d3js.org) based Graph UI library built 
-at [InvanaGraph](https://invana.io) for creating beautiful Graph 
-representations.
+Graph Canvas is [d3](https://d3js.org)v4 based Graph UI library built 
+at [InvanaGraph](https://invana.io) for creating clean and beautiful 
+graph data representations.
 
 ![screenshot](./screenshot.png)
 
 
+Refer `examples/` folder for full implementation code. 
 ```html
-
 <script src="/src/example-data.js"></script>
 <script src="/src/canvas-utils.js"></script>
 <script src="/src/canvas.js"></script>
@@ -48,6 +48,8 @@ representations.
     const nodeOptions = {
         "Planet": {
             "bgImagePropertyKey": "image",
+            // "bgImageUrl": "" - use this to set default backgroun image for this node or
+            // bgImagePropertyKey to get data from the properties data
             "labelOptions": {
                 "showLabel": true,
                 "labelTextFn": (node) => "Planet " + node.properties.name,
@@ -56,13 +58,15 @@ representations.
                 "radius": 24,
                 "strokeWidth": "4px",
                 "fillColor": "#ba4040",
-                "inShapeHTML": "<i class=\"fas fa-globe-americas\"></i>"
-
+                "inShapeHTML": "<i class=\"fas fa-globe\"></i>"
+            },
+            "tagOptions":{
+                "tagHtml": "<i class=\"fas fa-tools\"></i>"
             }
 
         },
         "Satellite": {
-            "bgImageUrl": "https://pngimg.com/uploads/moon/moon_PNG19.png",
+            "bgImagePropertyKey": "image",
             "labelOptions": {
                 "showLabel": true,
                 "labelTextFn": (node) => node.properties.name,
@@ -72,11 +76,11 @@ representations.
                 "strokeWidth": "4px",
                 "strokeColor": "#c4c4c4",
                 "fillColor": "#519ad2",
-                // "inShapeHTMLFn": (node) => node.properties.name.substring(0, 3)
+                "inShapeHTMLFn": (node) => "<i class=\"fas fa-meteor\"></i>" //"<strong>" + node.properties.name.substring(0, 3) + "</strong>"
             },
 
         }
-    }
+     }
 
     const nodesData = prepareNodesDataWithOptions(nodes, nodeOptions);
     const linksData = prepareLinksDataForCurves(links);
@@ -98,38 +102,34 @@ representations.
 </script>
 ```
 
-- [ ] drawCanvas
+ 
 
-- [ ] setnodeFillColor
-- [ ] setNodeRadius
-- [ ] setNodeStrokeColor
-- [ ] setNodeTagImage - one of the right bottom of node.
-- [ ] setNodeCenterText
-- [ ] setNodeLabel
-- [ ] setNodeShape [Not important during beta]
+- [x] setNodeFillColor
+- [x] setNodeRadius
+- [x] setNodeStrokeColor
+- [x] setNodeTagImage - one of the right bottom of node.
+- [x] setNodeHtml
+- [x] setNodeLabel
+- [ ] setNodeShape [Not implementing during beta]
 
-- [ ] setLinkLength
-- [ ] setLinkStrokeColor
-- [ ] setLinkStrokeType
-- [ ] setLinkBorderColor
-- [ ] setLinkLabel
-- [ ] setLinkLabelColor
+- [x] setLinkLength
+- [x] setLinkStrokeColor
+- [x] setLinkStrokeType
+- [x] setLinkBorderColor
+- [x] setLinkLabel
+- [x] setLinkLabelColor
 - [ ] setArrowHeadColor
 
 - [ ] fixNodePosition
 - [ ] releaseNodePosition
-
-
-- [ ] showToolTip
-- [ ] hideToolTip
-
-- [ ] ZoomInCanvas
-- [ ] ZoomOutCanvas
-- [ ] pan
+ 
+- [x] ZoomInCanvas
+- [x] ZoomOutCanvas
+- [x] pan
 
 - [ ] CenterObjectsInCanvas
-- [ ] onDragStarted
-- [ ] onDragEnded
+- [x] onDragStarted // control not given to user yet
+- [x] onDragEnded // control not given to user yet
 
 
 

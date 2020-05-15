@@ -61,6 +61,8 @@
     const nodeOptions = {
         "Planet": {
             "bgImagePropertyKey": "image",
+            // "bgImageUrl": "" - use this to set default backgroun image for this node or
+            // bgImagePropertyKey to get data from the properties data
             "labelOptions": {
                 "showLabel": true,
                 "labelTextFn": (node) => "Planet " + node.properties.name,
@@ -91,7 +93,7 @@
             },
 
         }
-    }
+     }
 
     const nodesData = prepareNodesDataWithOptions(nodes, nodeOptions);
     const linksData = prepareLinksDataForCurves(links);
