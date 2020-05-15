@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         * {
             padding: 0;
@@ -69,14 +69,12 @@
             "shapeOptions": {
                 "radius": "30",
                 "strokeWidth": "4px",
-                "fillColor": "#efefef"
+                "fillColor": "#ba4040",
             }
 
         },
         "Satellite": {
-                        "bgImagePropertyKey": "image",
-
-            // "bgImageUrl": "https://cdn2.iconfinder.com/data/icons/space-82/64/asteroid-2-512.png",
+            "bgImagePropertyKey": "image",
             "labelOptions": {
                 "showLabel": true,
                 "labelTextFn": (node) => node.properties.name,
@@ -85,9 +83,11 @@
             "shapeOptions": {
                 "radius": "20",
                 "strokeWidth": "2px",
-                "strokeColor": "#333333",
-                "fillColor": "#efefef",
-                "inShapeHTMLFn": (node) => node.properties.name.substring(0, 3)
+                "strokeColor": "#c4c4c4",
+                "fillColor": "#519ad2",
+                // "inShapeHTMLFn": (node) => node.properties.name.substring(0, 3)
+                "inShapeHTML": "<i class=\"fas fa-globe-americas\"></i>"
+
                 ,
             }
         }

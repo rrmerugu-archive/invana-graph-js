@@ -1,10 +1,11 @@
 // generic
 const showLabelDefaultChoice = true;
+const DefaultCanvasBackgroundColor = "#333333";
 
 // node specific
 const nodeRadius = 24;
 const nodeFillColor = "#333333";
-const nodeTxtColor = "#adadad";
+const nodeTxtColor = "#efefef";
 const nodeStrokeColor = "#4385b8";
 const nodeStrokeWidth = 5;
 const nodeLabelColor = "#4bd02d"
@@ -15,7 +16,7 @@ const linkDistance = 300;
 const linkCurvature = .55;
 const linkStrokeWidth = '2px';
 const linkFillColor = "#727272";
-const linkTextColor = "#727272";
+const linkTextColor = "#efefef";
 
 
 function prepareLinksDataForCurves(links) {

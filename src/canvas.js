@@ -1,17 +1,18 @@
-function InvanaGraphUI(canvasHTMLSelector,
-                       nodesData,
-                       linksData,
-                       // node methods
-                       onNodeMouseOver,
-                       onNodeMouseOut,
-                       onNodeClick,
-                       // link methods
-                       onLinkClick,
-                       onLinkMouseOver,
-                       onLinkMouseOut,
+function InvanaGraphUI(
+    canvasHTMLSelector,
+    nodesData,
+    linksData,
+    // node methods
+    onNodeMouseOver,
+    onNodeMouseOut,
+    onNodeClick,
+    // link methods
+    onLinkClick,
+    onLinkMouseOver,
+    onLinkMouseOut,
 ) {
 
-    const svg = d3.select(canvasHTMLSelector);
+    const svg = d3.select(canvasHTMLSelector).style("background-color", DefaultCanvasBackgroundColor);
     const everything = svg.append("g").attr("class", "everything");
     const linksG = everything.append("g").attr("class", "links");
     const nodesG = everything.append("g").attr("class", "nodes");
@@ -48,21 +49,9 @@ function InvanaGraphUI(canvasHTMLSelector,
         .attr("stroke-width", linkStrokeWidth)
         .attr("fill", "transparent")
         .attr('marker-end', (d, i) => 'url(#link-arrow-' + i + ')')
-        .on("mouseover", function (d) {
-            if (onLinkMouseOver) {
-                onLinkMouseOver(d)
-            }
-        })
-        .on("mouseout", function (d) {
-            if (onLinkMouseOut) {
-                onLinkMouseOut(d)
-            }
-        })
-        .on("click", function (d) {
-            if (onLinkClick) {
-                onLinkClick(d)
-            }
-        });
+        .on("mouseover", (d) => onLinkMouseOver ? onLinkMouseOver(d) : console.log("No onLinkMouseOver action set."))
+        .on("mouseout", (d) => onLinkMouseOut ? onLinkMouseOut(d) : console.log("No onLinkMouseOut action set."))
+        .on("click", (d) => onLinkClick ? onLinkClick(d) : console.log("No onLinkClick action set."));
 
 
     const linkText = links
@@ -74,8 +63,8 @@ function InvanaGraphUI(canvasHTMLSelector,
         })
         .style("text-anchor", "middle")
         .attr("startOffset", "50%")
-        .attr('fill', linkTextColor)
-        .attr('stroke', linkFillColor)
+        .attr('fill', linkTextColor) // TODO add .meta for links also
+        .attr('stroke', linkTextColor)
         .text((d, i) => `${d.label || d.id}`);
 
     let nodes = nodesG
@@ -88,21 +77,9 @@ function InvanaGraphUI(canvasHTMLSelector,
             .on("start", dragStarted)
             .on("drag", dragged)
             .on("end", dragEnded))
-        .on("mouseover", function (d) {
-            if (onNodeMouseOver) {
-                onNodeMouseOver(d)
-            }
-        })
-        .on("mouseout", function (d) {
-            if (onNodeMouseOut) {
-                onNodeMouseOut(d)
-            }
-        })
-        .on("click", function (d) {
-            if (onNodeClick) {
-                onNodeClick(d)
-            }
-        });
+        .on("mouseover", (d) => onNodeMouseOver ? onNodeMouseOver(d) : console.log("No onNodeMouseOver action set."))
+        .on("mouseout", (d) => onNodeMouseOut ? onNodeMouseOut(d) : console.log("No onNodeMouseOut action set."))
+        .on("click", (d) => onNodeClick ? onNodeClick(d) : console.log("No onNodeClick action set."))
 
 
     nodes.append("circle")
@@ -127,9 +104,10 @@ function InvanaGraphUI(canvasHTMLSelector,
     nodes.append('g')
         .attr('transform', function (d) {
                 const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4);
-                const dx = d.meta.shapeOptions.radius - (side / 2) * (2.5);
-                const dy = d.meta.shapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3) - 4;
-                return 'translate(' + [dx, dy] + ')'
+                const dx = -1 * (side / 2);
+                // const dx = d.meta.shapeOptions.radius - (side / 2) * (2.5);
+                // const dy = d.meta.shapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3) - 4;
+                return 'translate(' + [dx, dx] + ')'
             }
         )
         .append("foreignObject")
@@ -139,11 +117,21 @@ function InvanaGraphUI(canvasHTMLSelector,
         })
         .attr("height", (d) => 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4)) // side
         .append("xhtml:body")
-        .style("text-align", "center")
         .style("color", (d) => d.meta.shapeOptions.textColor)
-        .style("font-size", "16") // make this dynamic based on the node radius also
+        .style("font-size", "16px") // make this dynamic based on the node radius also
         .style("font-weight", "bold")
         .style("background-color", "transparent")
+        // .html(function (d) {
+        //     return d.meta.shapeOptions.inShapeHTML
+        // })
+        .append("xhtml:span")
+        .style("text-align", "center")
+        .style("display", "block")
+        .style("vertical-align", "middle")
+
+        .style("color", (d) => d.meta.shapeOptions.textColor)
+        .style("background-color", "transparent")
+        .style("padding-top", (d)=> d.meta.shapeOptions.radius/ 4)
         .html(function (d) {
             return d.meta.shapeOptions.inShapeHTML
         });
@@ -186,9 +174,9 @@ function InvanaGraphUI(canvasHTMLSelector,
             return "bold";
         })
         .style("display", (d) => (d.meta.labelOptions.showLabel) ? "block" : "none")
-        .style("text-shadow", function (d, i) {
-            return "1px 1px " + d3.rgb(d.meta.labelOptions.labelColor).darker(1);
-        });
+    // .style("text-shadow", function (d, i) {
+    //     return "1px 1px " + d3.rgb(d.meta.labelOptions.labelColor).darker(1);
+    // });
 
 
     everything.append("svg:defs").selectAll("marker")
@@ -261,7 +249,7 @@ function InvanaGraphUI(canvasHTMLSelector,
 
     svg.call(d3.zoom()
         .extent([[0, 0], [clientWidth, clientHeight]])
-        // .scaleExtent([1, 8])
+        .scaleExtent([0.1, 7])
         .on("zoom", zoomed));
 
     function zoomed() {
