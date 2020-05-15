@@ -115,13 +115,12 @@ function InvanaGraphUI(
         .style("padding-top", (d) => d.meta.shapeOptions.radius / 4)
         .html(function (d) {
             const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4) * 1.5;
-
             if (d.meta.bgImageUrl) {
                 return "<img src='" + d.meta.bgImageUrl + "' style='width: " + side + "px; border-radius: 3rem;' />"
             }
         })
 
-    // node bgImageUrl CAP
+    // node bgImageUrl CAP ; this will create a border ring around the image on top of it. creating clean UI
     nodes.append("circle")
         .attr("class", "bgImageUrlCap")
         .attr("r", (d) => d.meta.shapeOptions.radius)
@@ -130,7 +129,7 @@ function InvanaGraphUI(
         .attr("stroke-width", (d) => parseInt(d.meta.shapeOptions.strokeWidth.replace("px", "")) + 1);
 
 
-    // for nodeBgHtml
+    // for nodeBgHtml - this will be on top of background image
     nodes.append('g')
         .attr("class", "nodeHTML")
         .attr('transform', function (d) {
@@ -161,15 +160,17 @@ function InvanaGraphUI(
         .style("background-color", "transparent")
         .style("padding-top", (d) => d.meta.shapeOptions.radius / 4)
         .html(function (d) {
-            if (d.meta.showLabel) {
+            if (d.meta.shapeOptions.inShapeHTML && !d.meta.bgImageUrl) {
                 return d.meta.shapeOptions.inShapeHTML
             }
         });
 
+    //
     nodes.append('g')
+        .attr("class", "tagHTML")
         .attr('transform', function (d) {
                 const side = 2 * d.meta.shapeOptions.radius * Math.cos(Math.PI / 4);
-                const dx = (side / 2);
+                const dx =   (side / 2);
                 // const dx = d.meta.shapeOptions.radius - (side / 2) * (2.5);
                 // const dy = d.meta.shapeOptions.radius - (side / 2) * (2.5) * (2.5 / 3) - 4;
                 return 'translate(' + [dx, dx - (d.meta.shapeOptions.radius / 4) + (parseInt(d.meta.shapeOptions.strokeWidth.replace("px", "").replace("rem", "")))] + ')'
@@ -189,7 +190,7 @@ function InvanaGraphUI(
         .append("xhtml:span")
         .style("color", (d) => d.meta.shapeOptions.textColor)
         .style("background-color", "transparent")
-        .html((d) => d.meta.shapeOptions.inShapeHTML);
+        .html((d) => "<i class=\"fas fa-globe-africa\"></i>");
 
 
     nodes.append("title")

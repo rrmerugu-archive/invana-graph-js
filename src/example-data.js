@@ -14,7 +14,7 @@ let graphs = {
             "id": 2,
             "properties": {
                 "name": "Earth",
-                "image": "https://icons.iconarchive.com/icons/dtafalonso/modern-xp/512/ModernXP-73-Globe-icon.png"
+                "image": "https://mpng.subpng.com/20191123/rsk/transparent-worldwide-icon-earth-icon-science-icon-5dd8d9d82a6072.9717760615744926321736.jpg"
             }
         },
         {
